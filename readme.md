@@ -14,14 +14,16 @@ A arquitetura integra os seguintes componentes:
 
 O projeto é composto pelos seguintes scripts modulares:
 
--   `1_langchain_agent_structure.py`
-    -   **Propósito:** Define o esqueleto do agente de IA. Inclui placeholders para a inicialização do modelo de linguagem (LLM) e para a integração das ferramentas de busca.
--   `2_postgresql_session_management.py`
+-   `langchain_agent.py`
+    -   **Propósito:** Define o agente de IA já configurado com ferramentas reais de busca vetorial (Supabase) e busca na internet.
+-   `postgresql_session_management.py`
     -   **Propósito:** Gerencia a conexão com o banco de dados PostgreSQL. Contém funções para criar a tabela de histórico, salvar e carregar conversas de usuários associadas a uma ID de sessão.
--   `3_supabase_rag_integration.py`
-    -   **Propósito:** Lida com a integração com o Supabase para a funcionalidade RAG. Inclui código para inicializar o cliente, pré-processar documentos, gerar embeddings de texto e realizar buscas vetoriais para encontrar informações relevantes.
--   `4_internet_search_stub.py`
-    -   **Propósito:** Fornece um placeholder para uma ferramenta de busca na internet. Simula a funcionalidade que, em uma implementação completa, se conectaria a uma API de busca (como Google, Bing ou Tavily) para obter dados externos.
+-   `supabase_rag_integration.py`
+    -   **Propósito:** Implementa a integração com o Supabase para a funcionalidade RAG, incluindo extração de texto de PDFs, geração de embeddings e busca vetorial.
+-   `internet_search.py`
+    -   **Propósito:** Implementa uma ferramenta real de busca na internet utilizando a API Tavily.
+-   `main.py`
+    -   **Propósito:** Exponibiliza o agente como uma API FastAPI compatível com o formato da OpenAI.
 
 ## Instalação
 
@@ -83,25 +85,31 @@ Cada script pode ser executado individualmente para testar sua funcionalidade. C
 -   **Estrutura do Agente**
     Este script imprime uma mensagem indicando que a estrutura do agente está pronta.
     ```bash
-    python 1_langchain_agent_structure.py
+    python langchain_agent.py
     ```
 
 -   **Gerenciamento de Sessão com PostgreSQL**
     Este script testa a conexão com o banco de dados, cria a tabela de histórico (se não existir) e demonstra como salvar e carregar uma conversa.
     ```bash
-    python 2_postgresql_session_management.py
+    python postgresql_session_management.py
     ```
 
 -   **Integração RAG com Supabase**
     Este script demonstra o fluxo de processamento de documentos, geração de embeddings e busca vetorial no Supabase.
     ```bash
-    python 3_supabase_rag_integration.py
+    python supabase_rag_integration.py
     ```
 
 -   **Busca na Internet**
     Este script executa uma simulação de busca na internet e imprime os resultados mocados.
     ```bash
-    python 4_internet_search_stub.py
+    python internet_search.py
+    ```
+
+-   **API FastAPI**
+    Este script inicia o servidor que expõe o agente em um endpoint compatível com OpenAI.
+    ```bash
+    uvicorn main:app --host 0.0.0.0 --port 8000
     ```
 
 ## Contribuição

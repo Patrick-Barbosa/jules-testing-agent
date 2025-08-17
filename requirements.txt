@@ -1,7 +1,15 @@
 langchain
 langchain-openai
+langchain-community
+openai
+fastapi
+uvicorn
+pydantic
 psycopg2-binary
 python-dotenv
+PyPDF2
 requests
 supabase
 tiktoken
+tavily-python
+httpx
