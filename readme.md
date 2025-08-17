@@ -116,7 +116,6 @@ Cada script pode ser executado individualmente para testar sua funcionalidade. C
     Este script inicia o servidor que expõe o agente em um endpoint compatível com OpenAI.
     ```bash
     uvicorn main:app --host 0.0.0.0 --port 8000
-    ```
 
 -   **Teste integrado**
     Para validar rapidamente as integrações (RAG, Alpha Vantage e agente), execute:
@@ -132,7 +131,6 @@ Cada script pode ser executado individualmente para testar sua funcionalidade. C
          -H "Content-Type: application/json" \
          -H "Authorization: Bearer ${API_KEY}" \
          -d '{"messages":[{"role":"user","content":"Qual o preço da ação BBAS3?"}]}'
-    ```
 
 ## Contribuição
 
