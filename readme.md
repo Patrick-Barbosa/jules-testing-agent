@@ -74,6 +74,12 @@ SUPABASE_KEY="sua_chave_anon_ou_service_role_aqui"
 # Chave de API para o modelo de linguagem (ex: OpenAI)
 OPENAI_API_KEY="sk-sua_chave_de_api_aqui"
 
+# Chave de API para consultas de ações na Alpha Vantage
+ALPHA_VANTAGE_API_KEY="sua_chave_alpha_vantage_aqui"
+
+# Chave utilizada para autenticar requisições à API FastAPI deste projeto
+API_KEY="chave_de_acesso_local"
+
 # (Opcional) Chave de API para um serviço de busca na internet (ex: Tavily)
 TAVILY_API_KEY="tvly-sua_chave_de_api_aqui"
 ```
@@ -110,7 +116,21 @@ Cada script pode ser executado individualmente para testar sua funcionalidade. C
     Este script inicia o servidor que expõe o agente em um endpoint compatível com OpenAI.
     ```bash
     uvicorn main:app --host 0.0.0.0 --port 8000
+
+-   **Teste integrado**
+    Para validar rapidamente as integrações (RAG, Alpha Vantage e agente), execute:
+    ```bash
+    python main.py
     ```
+    O script executará um teste que consulta o preço da ação BBAS3 e buscará documentos de exemplo no Supabase.
+
+-   **Exemplo de chamada ao endpoint**
+    Com o servidor em execução, envie uma requisição com `curl` (substitua `API_KEY` pelo valor definido no `.env`):
+    ```bash
+    curl -X POST "http://localhost:8000/v1/chat/completions" \
+         -H "Content-Type: application/json" \
+         -H "Authorization: Bearer ${API_KEY}" \
+         -d '{"messages":[{"role":"user","content":"Qual o preço da ação BBAS3?"}]}'
 
 ## Contribuição
 
