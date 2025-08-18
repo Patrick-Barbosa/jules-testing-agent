@@ -22,35 +22,6 @@ if SUPABASE_URL and SUPABASE_KEY and os.getenv("OPENAI_API_KEY"):
     embeddings_model = OpenAIEmbeddings(model="text-embedding-ada-002")
 
 
-# ---------------------------------------------------------------------------
-# Inicialização e utilidades
-# ---------------------------------------------------------------------------
-
-def initialize_supabase() -> None:
-    """Cria a tabela de documentos e habilita a extensão vetorial."""
-    if not supabase:
-        logger.warning("Cliente Supabase não configurado; pulando inicialização.")
-        return
-    try:
-        supabase.postgrest.rpc(
-            "exec_sql",
-            {
-                "sql": (
-                    "CREATE EXTENSION IF NOT EXISTS vector;"
-                    "CREATE TABLE IF NOT EXISTS documents ("
-                    "id uuid PRIMARY KEY DEFAULT gen_random_uuid(),"
-                    "content text,"
-                    "embedding vector(1536),"
-                    "metadata jsonb"
-                    ");"
-                )
-            },
-        ).execute()
-        logger.info("Tabela documents verificada/criada.")
-    except Exception as exc:  # noqa: BLE001
-        logger.warning("Falha ao preparar tabela no Supabase: %s", exc)
-
-
 def preprocess_document(file_path: str) -> str:
     """Extrai texto de um arquivo PDF ou texto simples."""
     if not os.path.exists(file_path):
@@ -146,6 +117,5 @@ def ingest_pdf(file_path: str, source: str) -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    initialize_supabase()
     preload_example_documents()
     print(retrieve_relevant_documents("inflação"))
