@@ -9,12 +9,16 @@ estejam configuradas.
 import os
 import json
 from urllib.parse import urlparse
+from dotenv import load_dotenv
+
+load_dotenv()
 
 import requests
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+SUPABASE_KEY = os.getenv("SUPABASE_ACCESS_TOKEN")
 
+print(SUPABASE_URL)
 
 def _get_project_ref(url: str) -> str:
     """Extrai o project ref da URL do Supabase."""
@@ -28,16 +32,16 @@ def run_sql(sql: str) -> None:
         return
 
     project_ref = _get_project_ref(SUPABASE_URL)
-    endpoint = f"https://api.supabase.com/v1/projects/{project_ref}/sql"
+    endpoint = f"https://api.supabase.com/v1/projects/{project_ref}/database/query"
     headers = {
         "Authorization": f"Bearer {SUPABASE_KEY}",
         "Content-Type": "application/json",
     }
-    payload = {"sql": sql}
+    payload = {"query": sql}
 
     try:
-        resp = requests.post(endpoint, headers=headers, data=json.dumps(payload), timeout=30)
-        if resp.status_code == 200:
+        resp = requests.post(endpoint, headers=headers, json=payload, timeout=30)
+        if resp.status_code == 200 or resp.status_code == 201:
             print("   - Sucesso")
         else:
             print(f"   - Falha {resp.status_code}: {resp.text}")
