@@ -1,3 +1,10 @@
+# 🚨 AVISO DE SEGURANÇA 🚨
+# NUNCA exponha suas chaves de API ou credenciais em código público ou versionado.
+# 1. Utilize sempre um arquivo .env para armazenar suas credenciais.
+# 2. Adicione o arquivo .env ao seu .gitignore para evitar o commit acidental.
+# 3. Se você expôs uma chave, regenere-a IMEDIATAMENTE no painel do provedor (Supabase, OpenAI, etc.).
+# 4. Para o Supabase, use a chave 'anon key' para operações do lado do cliente e mantenha a 'service_role key' estritamente no backend seguro.
+
 """API FastAPI que expõe o agente de análise de investimentos em formato compatível com OpenAI."""
 
 import os
@@ -21,10 +28,7 @@ from postgresql_session_management import (
     save_conversation_history,
     setup_database,
 )
-from supabase_rag_integration import (
-    initialize_supabase,
-    preload_example_documents,
-)
+from supabase_rag_integration import preload_example_documents
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -41,7 +45,6 @@ def startup_event() -> None:
     """Configurações executadas ao iniciar o servidor."""
     try:
         setup_database()
-        initialize_supabase()
         preload_example_documents()
         logger.info("Serviços inicializados.")
     except Exception as exc:  # noqa: BLE001
@@ -154,12 +157,12 @@ def run_tests() -> None:
     resp = client.post("/v1/chat/completions", json=payload, headers=headers)
     logger.info("Resultado do teste /v1/chat/completions: %s", resp.json())
 
-    if os.getenv("ALPHA_VANTAGE_API_KEY"):
+    if os.getenv("ALPHA_VANTAGE") or os.getenv("ALPHA_VANTAGE_API_KEY"):
         content = resp.json()["choices"][0]["message"]["content"]
         assert "Preço" in content, "Resposta não contém dados de preço."
     else:
         logger.warning(
-            "ALPHA_VANTAGE_API_KEY não configurada; não foi possível validar preço."
+            "ALPHA_VANTAGE/ALPHA_VANTAGE_API_KEY não configurada; não foi possível validar preço."
         )
 
 
