@@ -6,6 +6,9 @@ from typing import List, Dict, Any
 
 from supabase import Client, create_client
 from postgrest.exceptions import APIError  # Importa o erro específico da API
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- Configuração do Logging ---
 # É uma prática melhor usar logging em vez de print para mensagens de status/erro.

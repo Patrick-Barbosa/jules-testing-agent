@@ -2,6 +2,9 @@ import requests
 from datetime import datetime, timedelta
 from cachetools import cached, TTLCache
 from langchain.agents import tool
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Criamos um cache de 5 horas que será usado pela ferramenta
 five_hour_cache = TTLCache(maxsize=100, ttl=18000)

@@ -9,6 +9,9 @@ from postgrest.exceptions import APIError
 from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- Configuration ---
 # Set up basic logging to see the script's output
