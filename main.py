@@ -142,5 +142,5 @@ def chat_completions(
 
 if __name__ == "__main__":
     # Para rodar o servidor, utilize o comando no terminal:
-    # uvicorn nome_do_arquivo:app --reload
+    # uvicorn main:app --reload
     logger.info("To start the server, run: uvicorn <filename>:app --reload")

@@ -12,3 +12,4 @@ supabase
 tiktoken
 tavily-python
 httpx
+cachetools

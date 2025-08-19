@@ -7,13 +7,13 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import AgentType, Tool, initialize_agent
 from langchain.memory import ConversationBufferMemory
 
-# --- MODIFIED IMPORTS ---
 # We now import the VectorStoreManager class
 from supabase_rag_integration import VectorStoreManager
 from internet_search import internet_search
 from alpha_vantage_tool import alpha_vantage_stock_price
+from report_focus import buscar_serie_temporal_expectativas_focus
 
-# --- MODIFIED FUNCTION ---
+
 # The function now accepts the vector_store_manager as a required argument.
 def create_agent(
     memory: ConversationBufferMemory, vector_store_manager: VectorStoreManager
@@ -36,9 +36,9 @@ def create_agent(
     tools = [
         Tool(
             name="Busca RAG Supabase",
-            func=supabase_rag_retriever, # Uses our new helper function
+            func=supabase_rag_retriever,
             description=(
-                "Use para consultar informações de relatórios Focus e COPOM armazenados internamente."
+                "Não use por enquanto pois o banco vetorial não contém absolutamente nada"
             ),
         ),
         Tool(
@@ -46,7 +46,21 @@ def create_agent(
             func=internet_search,
             description="Obtém notícias e dados atualizados da internet em tempo real.",
         ),
-        alpha_vantage_stock_price,
+        Tool(
+            name="Expectativas Focus",
+            func=buscar_serie_temporal_expectativas_focus,
+            description=(
+                "Busca a série temporal de expectativas do relatório Focus do Banco Central."
+            ),
+        ),
+        Tool(
+            name="Preço de Ações Alpha Vantage",
+            func=alpha_vantage_stock_price,
+            description=(
+                "Obtém o preço atual de ações usando a API Alpha Vantage."
+                "Use o símbolo da ação como parâmetro."
+            ),
+        )
     ]
 
     return initialize_agent(
@@ -60,7 +74,5 @@ def create_agent(
 
 
 if __name__ == "__main__":
-    # This block cannot be run directly anymore because it requires an instance
-    # of VectorStoreManager and ConversationBufferMemory to be created first.
     # The agent is now created and run from your main.py file.
     print("O agente agora é criado e executado a partir do arquivo principal (main.py).")
