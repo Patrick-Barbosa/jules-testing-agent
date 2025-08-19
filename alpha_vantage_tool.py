@@ -5,9 +5,12 @@ from typing import Any
 
 import requests
 from langchain.tools import tool
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # A variável de ambiente pode ser definida como ALPHA_VANTAGE ou ALPHA_VANTAGE_API_KEY
-ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE") or os.getenv("ALPHA_VANTAGE_API_KEY")
+ALPHA_VANTAGE_API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 
 @tool
