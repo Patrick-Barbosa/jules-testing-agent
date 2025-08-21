@@ -129,7 +129,7 @@ def main():
         # Load credentials from environment variables
         manager = VectorStoreManager(
             supabase_url=os.getenv("SUPABASE_URL"),
-            supabase_key=os.getenv("SUPABASE_KEY"),
+            supabase_key=os.getenv("SUPABASE_SERVICE_KEY"),
             openai_key=os.getenv("OPENAI_API_KEY")
         )
 

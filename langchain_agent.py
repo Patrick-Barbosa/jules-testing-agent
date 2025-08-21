@@ -1,13 +1,12 @@
-# langchain_agent.py (Versão Final com Agente de Ferramentas)
+# langchain_agent.py (Versão Final Refinada)
 
-import os
 from typing import List
 
 from langchain import hub
 from langchain_openai import ChatOpenAI
-# <<< MUDANÇA 1: Importamos o construtor de agente correto >>>
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.tools import tool
+from langchain_experimental.tools import PythonREPLTool
 
 from supabase_rag_integration import VectorStoreManager
 from internet_search import internet_search
@@ -52,20 +51,23 @@ def create_agent(llm: ChatOpenAI, vector_store_manager: VectorStoreManager):
         obter_expectativas_focus,
         obter_preco_de_acao,
         busca_documentos_internos,
+        PythonREPLTool()
     ]
 
-    # <<< MUDANÇA 2: Puxamos o prompt correto para agentes de ferramentas >>>
-    # Este prompt é otimizado para o fluxo de "tool calling".
     prompt = hub.pull("hwchase17/openai-tools-agent")
     
-    # Adicionamos sua mensagem de sistema ao prompt. A estrutura é um pouco diferente.
-    # O prompt baixado já contém a mensagem de sistema, então nós a editamos.
-    prompt.messages[0].prompt.template = "Você é um assistente especialista em análise de investimentos. Seja conciso e preciso. Responda sempre em português do Brasil."
+    # <<< MUDANÇA PRINCIPAL: Refinamos a mensagem de sistema >>>
+    # Adicionamos a capacidade de analisar imagens e o contexto da data atual.
+    prompt.messages[0].prompt.template = (
+        "Você é um assistente especialista em análise de investimentos. "
+        "Seja conciso e preciso. Responda sempre em português do Brasil. "
+        "A data e hora atuais são: 20 de agosto de 2025, 21:39. "
+        "Você tem a capacidade de analisar imagens (gráficos, tabelas) que forem enviadas. "
+        "Você também tem acesso a um interpretador de código Python para cálculos e análises."
+    )
 
-    # <<< MUDANÇA 3: Usamos o construtor de agente correto >>>
     agent = create_openai_tools_agent(llm, all_tools, prompt)
 
-    # Executor do Agente (sem alteração na sua chamada)
     agent_executor = AgentExecutor(
         agent=agent,
         tools=all_tools,

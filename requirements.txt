@@ -1,6 +1,7 @@
 langchain
 langchain-openai
 langchain-community
+langchain-experimental
 openai
 fastapi
 uvicorn
